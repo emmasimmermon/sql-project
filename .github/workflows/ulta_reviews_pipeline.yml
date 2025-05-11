@@ -1,0 +1,28 @@
+name: Ulta Reviews Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clean-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Clean Review Data
+        run: |
+          jupyter nbconvert --to notebook --execute notebook/Data-Cleaning/Ulta_API_Data_Cleaning.ipynb
+
+      - name: Analyze Reviews with SQL
+        run: |
+          jupyter nbconvert --to notebook --execute notebook/Data-Retrieval/Ulta_Web_Scrape_SQL_Analysis.ipynb
